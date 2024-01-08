@@ -1,0 +1,129 @@
+#include <iostream>
+using namespace std;
+
+// Function to display the game board with row and column numbers
+void displayBoard(char board[3][3]) 
+{
+    cout << "    1   2   3" << endl;
+    cout << "  -------------" << endl;
+    for (int i = 0; i < 3; i++)
+       {
+        cout << i + 1 << " ";
+        for (int j = 0; j < 3; j++) 
+           {
+            cout << "| " << board[i][j] << " ";
+           }
+        cout << "|" << endl << "  -------------" << endl;
+       }
+}
+
+// Function to check if the player has won
+bool checkWin(char board[3][3], char player) 
+{
+    // Checking rows
+    for (int i = 0; i < 3; i++) 
+      {
+        if (board[i][0] == player && board[i][1] == player && board[i][2] == player) 
+          {
+            return true;
+          }
+       }
+
+    // Checking columns
+    for (int i = 0; i < 3; i++) 
+       {
+        if (board[0][i] == player && board[1][i] == player && board[2][i] == player) 
+           {
+            return true;
+           }
+       }
+
+    // Checking diagonals
+    if (board[0][0] == player && board[1][1] == player && board[2][2] == player) 
+       {
+        return true;
+       }
+
+    if (board[0][2] == player && board[1][1] == player && board[2][0] == player) 
+       {
+        return true;
+       }
+
+    return false;
+}
+
+// Function to check if the game has ended in a draw
+bool checkDraw(char board[3][3]) 
+{
+    for (int i = 0; i < 3; i++) 
+     {
+        for (int j = 0; j < 3; j++) 
+          {
+            if (board[i][j] == '-') 
+            {
+                return false;
+            }
+          }
+     }
+    return true;
+}
+
+// Function to make a move
+void makeMove(char board[3][3], int row, int col, char player) 
+ {
+    if (board[row][col] == '-') 
+       {
+         board[row][col] = player;
+       } 
+    else 
+       {
+        cout << "Invalid move. Try again." << endl;
+       }
+ }
+
+int main() 
+  {
+    char board[3][3] = {{'-','-','-'},
+                        {'-','-','-'},
+                        {'-','-','-'}};
+
+    char player = 'X';
+    int row, col;
+
+    while (true) 
+      {
+        displayBoard(board);
+        cout << "Player " << player << ", enter your move (row and column number separated by a space): ";
+        cin >> row >> col;
+
+        if (row >= 1 && row <= 3 && col >= 1 && col <= 3) 
+          {
+            row--; col--; 
+            // Convert to 0-based index
+            makeMove(board, row, col, player);
+
+            if (checkWin(board, player)) 
+             {
+                displayBoard(board);
+                cout << "Congratulations! Player " << player << " wins!" << endl;
+                break;
+             }
+
+            if (checkDraw(board)) 
+             {
+                displayBoard(board);
+                cout << "The game ends in a draw." << endl;
+                break;
+             }
+
+            player = (player == 'X') ? 'O' : 'X'; 
+            // Switch players
+        } 
+        else 
+         {
+            cout << "Invalid row or column number. Please enter a number between 1 and 3." << endl;
+         }
+    }
+
+    return 0;
+}
