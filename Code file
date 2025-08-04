@@ -69,20 +69,22 @@ bool checkDraw(char board[3][3])
 }
 
 // Function to make a move
-void makeMove(char board[3][3], int row, int col, char player) 
- {
+bool makeMove(char board[3][3], int row, int col, char player) 
+{
     if (board[row][col] == '-') 
-       {
-         board[row][col] = player;
-       } 
+    {
+        board[row][col] = player;
+        return true;
+    } 
     else 
-       {
+    {
         cout << "Invalid move. Try again." << endl;
-       }
- }
+        return false;
+    }
+}
 
 int main() 
-  {
+{
     char board[3][3] = {{'-','-','-'},
                         {'-','-','-'},
                         {'-','-','-'}};
@@ -91,38 +93,38 @@ int main()
     int row, col;
 
     while (true) 
-      {
+    {
         displayBoard(board);
         cout << "Player " << player << ", enter your move (row and column number separated by a space): ";
         cin >> row >> col;
 
         if (row >= 1 && row <= 3 && col >= 1 && col <= 3) 
-          {
-            row--; col--; 
-            // Convert to 0-based index
-            makeMove(board, row, col, player);
+        {
+            row--; col--; // Convert to 0-based index
+            if (makeMove(board, row, col, player)) // Only switch if move is valid
+            {
+                if (checkWin(board, player)) 
+                {
+                    displayBoard(board);
+                    cout << "Congratulations! Player " << player << " wins!" << endl;
+                    break;
+                }
 
-            if (checkWin(board, player)) 
-             {
-                displayBoard(board);
-                cout << "Congratulations! Player " << player << " wins!" << endl;
-                break;
-             }
+                if (checkDraw(board)) 
+                {
+                    displayBoard(board);
+                    cout << "The game ends in a draw." << endl;
+                    break;
+                }
 
-            if (checkDraw(board)) 
-             {
-                displayBoard(board);
-                cout << "The game ends in a draw." << endl;
-                break;
-             }
-
-            player = (player == 'X') ? 'O' : 'X'; 
-            // Switch players
+                player = (player == 'X') ? 'O' : 'X'; // Switch players
+            }
+            // else: do not switch player, repeat turn
         } 
         else 
-         {
+        {
             cout << "Invalid row or column number. Please enter a number between 1 and 3." << endl;
-         }
+        }
     }
 
     return 0;
